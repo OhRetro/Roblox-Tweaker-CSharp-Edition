@@ -1,2 +1,2 @@
-# Roblox-Tweaker-CSharp-Edition
+# Roblox Tweaker C# Edition
 Roblox Tweaker remade on C#.
