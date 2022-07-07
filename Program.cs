@@ -6,6 +6,7 @@ namespace RTCSharpEdition {
         const string VERSION = "1.0";
         const string AUTHOR = "OhRetro";
         const string NAME_VERSION = NAME+" v"+VERSION;
+        const string REPOSITORY = "https://github.com/OhRetro/Roblox-Tweaker-CSharp-Edition";
         static string RO_VERSIONS_DIR = System.Environment.GetEnvironmentVariable("LOCALAPPDATA")+"\\Roblox\\Versions";
         static string RO_VERSION_DIR = "Not Set";
         static string RO_VERSION_DIR_TYPE = "Not Set";
@@ -41,7 +42,7 @@ namespace RTCSharpEdition {
             do {
                 Console.WriteLine("Select a Roblox version to use:");
                 for (int i = 0; i < dirs.Length; i++) {
-                    Console.WriteLine("[{0}] {1}", i, dirs[i].Split('\\').Last());
+                    Console.WriteLine("[{0}] {1} | {2} | {3}", i, dirs[i].Split('\\').Last(), RoVersionType(dirs[i]), Directory.GetCreationTime(dirs[i]));
                 }
                 
                 Console.Write(">");
@@ -57,7 +58,6 @@ namespace RTCSharpEdition {
             RO_VERSION_DIR = dirs[choice];
         }
 
-
         //Write File
         static void WriteRoVersionDirFile() {
             Console.WriteLine("[Writing File]");
@@ -71,13 +71,14 @@ namespace RTCSharpEdition {
                 Console.WriteLine("[Reading File]");
                 RO_VERSION_DIR = File.ReadAllText(RO_VERSION_DIR_FILE);
                 RO_TEXTURE_DIR = RO_VERSION_DIR+"\\PlatformContent\\pc\\textures";
-                RO_VERSION_DIR_TYPE = RoVersionType();
+                RO_VERSION_DIR_TYPE = RoVersionType(RO_VERSION_DIR);
                 Thread.Sleep(300);
             } else {
                 Console.WriteLine("[File not found]");
                 Thread.Sleep(1000);
                 SelectRoVersion();
                 WriteRoVersionDirFile();
+                ReadRoVersionDirFile();
             }
         }
 
@@ -123,15 +124,11 @@ namespace RTCSharpEdition {
                 for (int i = 0; i < files.Length; i++) {
                     list_textures = list_textures.Append(files[i]).ToArray();
                 }
-
  
                 if (choice == 2) {
                     for (int i = 0; i < EXCEPTION_TEXTURES.Length; i++) {
-                        //check if the texture is in the list
                         if (list_textures.Contains(RO_TEXTURE_DIR+"\\"+EXCEPTION_TEXTURES[i])) {
-                            //remove it from the list
                             list_textures = list_textures.Where(x => x != RO_TEXTURE_DIR+"\\"+EXCEPTION_TEXTURES[i]).ToArray();
-
                         }
                     }
                 }
@@ -147,7 +144,6 @@ namespace RTCSharpEdition {
                 }
                 Console.Clear();
 
-                //check how many textures have remaining in texture folder
                 string[] dirs_remaining = Directory.GetDirectories(RO_TEXTURE_DIR);
                 string[] files_remaining = Directory.GetFiles(RO_TEXTURE_DIR);
 
@@ -170,7 +166,7 @@ namespace RTCSharpEdition {
 
         //List Texture
         static void ListTextures() {
-            Console.WriteLine("[Textures List]\n");
+            Console.WriteLine("[Textures List]");
             string[] dirs = Directory.GetDirectories(RO_TEXTURE_DIR);
             string[] files = Directory.GetFiles(RO_TEXTURE_DIR);
             for (int i = 0; i < dirs.Length; i++) {
@@ -180,7 +176,7 @@ namespace RTCSharpEdition {
                 Console.WriteLine("{0}", files[i].Split('\\').Last());
             }
 
-            Console.WriteLine("\n[Press Any key to continue]");
+            Console.Write("\n[Press Any key to continue]");
             Console.ReadKey();
             Console.Clear();
         }
@@ -203,7 +199,7 @@ namespace RTCSharpEdition {
                 Console.WriteLine("[Backup Failed]");
             }
 
-            Console.WriteLine("\n[Press Any key to continue]");
+            Console.Write("\n[Press Any key to continue]");
             Console.ReadKey();
             Console.Clear();
         }
@@ -239,8 +235,8 @@ namespace RTCSharpEdition {
         }
 
         //Get Roblox Type
-        static string RoVersionType() {
-            string[] files = Directory.GetFiles(RO_VERSION_DIR);
+        static string RoVersionType(string directory) {
+            string[] files = Directory.GetFiles(directory);
             for (int i = 0; i < files.Length; i++) {
                 if (files[i].Split('\\').Last() == "RobloxPlayerBeta.exe") {
                     return "Roblox Player";
@@ -249,6 +245,18 @@ namespace RTCSharpEdition {
                 }
             }
             return "Unknown";
+        }
+
+        //About
+        static void About() {
+            Console.WriteLine("[About]");
+            Console.WriteLine("{0}", NAME_VERSION);
+            Console.WriteLine("Made by: {0}", AUTHOR);
+            Console.WriteLine("Repository: {0}", REPOSITORY);
+
+            Console.Write("\n[Press Any key to continue]");
+            Console.ReadKey();
+            Console.Clear();
         }
 
         static void Main(string[] args) {
@@ -269,7 +277,9 @@ namespace RTCSharpEdition {
             int menu;
             do {
                 Console.WriteLine(NAME_VERSION);
-                Console.WriteLine("[1] Delete Texture\n[2] List Textures\n[3] Update Version Directory\n[4] Backup Textures\n[5] Restore Textures\n[6] Delete Backup Folder\n[0] Exit\n");
+                Console.WriteLine("[1] Delete Textures\n[2] List Textures\n[3] Update Version Directory");
+                Console.WriteLine("[4] Backup Textures\n[5] Restore Textures\n[6] Delete Backup Folder\n");
+                Console.WriteLine("[7] About\n[0] Exit\n");
                 Console.WriteLine("Current Version Directory:\n\"{0}\"\nType: {1}", RO_VERSION_DIR, RO_VERSION_DIR_TYPE);
                 
                 Console.Write(">");
@@ -299,6 +309,9 @@ namespace RTCSharpEdition {
                         break;
                     case 6:
                         DeleteBackupDir();
+                        break;
+                    case 7:
+                        About();
                         break;
                     default:
                         break;
