@@ -12,9 +12,9 @@ It is a tool that allows you to tweak Roblox Textures, Like:
 
 ## TODO:
 * [ ] Make this Edition equivalent to the Original Python Edition.
-* [ ] Delete Textures
-* [ ] Add Exception Array/List for Texture Deleting
-* [ ] Backup Textures
-* [ ] Restore Textures from Backup
+* [x] Delete Textures
+* [x] Add Exception Array/List for Texture Deleting
+* [x] Backup Textures
+* [x] Restore Textures from Backup
 * [x] Change Roblox Version Directory
-* [ ] Show Remaining Textures
+* [x] Show Remaining Textures
