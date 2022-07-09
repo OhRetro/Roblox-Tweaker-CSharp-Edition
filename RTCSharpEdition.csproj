@@ -1,35 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+	<PropertyGroup>
 	  
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+		
+		<Authors>OhRetro</Authors>
+		<Product>Roblox Tweaker C# Edition</Product>
+		<Description>It is a tool that allows you to tweak Roblox Textures</Description>
+		<ApplicationIcon>logo.ico</ApplicationIcon>
+
+		<VersionMajor>1</VersionMajor>
+		<VersionMinor>1</VersionMinor>
+		<VersionPrefix>$(VersionMajor).$(VersionMinor)</VersionPrefix>
+		<VersionSuffix>BUILD-$([System.DateTime]::UtcNow.ToString(yyyyMMdd-HHmm))</VersionSuffix>
+		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+		<FileVersion>$(VersionPrefix)</FileVersion>
 	  
-    <Authors>OhRetro</Authors>
-    <Product>Roblox Tweaker C# Edition</Product>
-    <Description>It is a tool that allows you to tweak Roblox Textures</Description>
-    <ApplicationIcon>logo.ico</ApplicationIcon>
-    <PackageProjectUrl>https://github.com/OhRetro/Roblox-Tweaker-CSharp-Edition</PackageProjectUrl>
+		<NeutralLanguage>en</NeutralLanguage>
+		<AssemblyName>$(MSBuildProjectName)-BUILD-$([System.DateTime]::UtcNow.ToString(yyyyMMdd-HHmm))</AssemblyName>
+		<Copyright>2022</Copyright>
+		<SignAssembly>False</SignAssembly>
 
-	<VersionMajor>1</VersionMajor>
-    <VersionMinor>1</VersionMinor>
-    <VersionPrefix>$(VersionMajor).$(VersionMinor)</VersionPrefix>
-    <VersionSuffix>BUILD-$([System.DateTime]::UtcNow.ToString(yyyyMMdd-HHmm))</VersionSuffix>
-    <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
-    <FileVersion>$(VersionPrefix)</FileVersion>
-	  
-    <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-    <PackageLicenseFile>C:\Users\gabri.ZONE\Documents\Projects\C#\Roblox-Tweaker-CSharp-Edition\LICENSE</PackageLicenseFile>
-    <Copyright>2022</Copyright>
-
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="DiscordRichPresence" Version="1.0.175" />
-  </ItemGroup>
+	</PropertyGroup>
 
 </Project>
