@@ -2,10 +2,8 @@
 
 namespace RTCSharpEdition
 {
-
     internal class Program
     {
-
         const string NAME = "Roblox Tweaker C# Edition";
         const string VERSION = "1.1";
         const string AUTHOR = "OhRetro";
@@ -341,7 +339,7 @@ namespace RTCSharpEdition
                 Console.WriteLine("[Backup Textures Count]");
                 Console.WriteLine("Count: {0}\n", count);
 
-                if (count == 24)
+                if (count >= 24)
                 {
                     Console.WriteLine("[All Textures Found]");
                 }
