@@ -1,28 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+  
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
-
-	  <VersionMajor>1</VersionMajor>
-    <VersionMinor>0</VersionMinor>
-    <VersionPrefix>$(VersionMajor).$(VersionMinor)</VersionPrefix>
-    <VersionSuffix>BUILD-$([System.DateTime]::UtcNow.ToString(yyyyMMdd-HHmm))</VersionSuffix>
 	  
     <Authors>OhRetro</Authors>
     <PackageProjectUrl>https://github.com/OhRetro/Roblox-Tweaker-CSharp-Edition</PackageProjectUrl>
     <Product>Roblox Tweaker C# Edition</Product>
     <Description>It is a tool that allows you to tweak Roblox Textures</Description>
-	  
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+
+	  <VersionMajor>1</VersionMajor>
+    <VersionMinor>1</VersionMinor>
+    <VersionPrefix>$(VersionMajor).$(VersionMinor)</VersionPrefix>
+    <VersionSuffix>BUILD-$([System.DateTime]::UtcNow.ToString(yyyyMMdd-HHmm))</VersionSuffix>
     <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
     
-    <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
 
 </Project>

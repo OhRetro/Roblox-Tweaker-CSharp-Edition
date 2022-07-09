@@ -3,7 +3,7 @@
 namespace RTCSharpEdition {
     class Program {
         const string NAME = "Roblox Tweaker C# Edition";
-        const string VERSION = "1.0";
+        const string VERSION = "1.1";
         const string AUTHOR = "OhRetro";
         const string NAME_VERSION = NAME+" v"+VERSION;
         const string REPOSITORY = "https://github.com/OhRetro/Roblox-Tweaker-CSharp-Edition";
@@ -14,6 +14,7 @@ namespace RTCSharpEdition {
         static string RO_TEXTURE_DIR = "Not Set";
         static string[] EXCEPTION_TEXTURES = {"sky", "brdfLUT.dds", "studs.dds", "wangIndex.dds"};
         const string BACKUP_DIR = "./TextureBackup";
+        const string PATH_TO_TEXTURES_DIR = "\\PlatformContent\\pc\\textures";
 
         //Copy Folder
         static void CopyFolder(string sourceFolder, string destFolder) {
@@ -38,11 +39,20 @@ namespace RTCSharpEdition {
         static void SelectRoVersion() {
             Console.Clear();
             string[] dirs = Directory.GetDirectories(RO_VERSIONS_DIR);
+            string[] valid_dirs = {};
+            for (int i = 0; i < dirs.Length; i++) {
+                if (dirs[i].Split('\\').Last().StartsWith("version-")) {
+                    valid_dirs = valid_dirs.Append(dirs[i]).ToArray();
+                }
+            }
             int choice;
             do {
                 Console.WriteLine("Select a Roblox version to use:");
-                for (int i = 0; i < dirs.Length; i++) {
-                    Console.WriteLine("[{0}] {1} | {2} | {3}", i, dirs[i].Split('\\').Last(), RoVersionType(dirs[i]), Directory.GetCreationTime(dirs[i]));
+                for (int i = 0; i < valid_dirs.Length; i++) {
+                    Console.Write("[{0}] {1} | ", i, valid_dirs[i].Split('\\').Last());
+                    Console.Write("{0} | ", RoVersionType(valid_dirs[i]));
+                    Console.Write("Textures Count: {0} | ", TextureCount(valid_dirs[i]+PATH_TO_TEXTURES_DIR));
+                    Console.Write("{0}\n", Directory.GetCreationTime(valid_dirs[i]));
                 }
                 
                 Console.Write(">");
@@ -54,8 +64,8 @@ namespace RTCSharpEdition {
 
                 Console.Clear();
 
-            } while (choice < 0 || choice >= dirs.Length);
-            RO_VERSION_DIR = dirs[choice];
+            } while (choice < 0 || choice >= valid_dirs.Length);
+            RO_VERSION_DIR = valid_dirs[choice];
         }
 
         //Write File
@@ -70,7 +80,7 @@ namespace RTCSharpEdition {
             if (File.Exists(RO_VERSION_DIR_FILE)) {
                 Console.WriteLine("[Reading File]");
                 RO_VERSION_DIR = File.ReadAllText(RO_VERSION_DIR_FILE);
-                RO_TEXTURE_DIR = RO_VERSION_DIR+"\\PlatformContent\\pc\\textures";
+                RO_TEXTURE_DIR = RO_VERSION_DIR+PATH_TO_TEXTURES_DIR;
                 RO_VERSION_DIR_TYPE = RoVersionType(RO_VERSION_DIR);
                 Thread.Sleep(300);
             } else {
@@ -95,8 +105,8 @@ namespace RTCSharpEdition {
         static void RemoveTexture() {
             int choice;
             do {
-                Console.WriteLine("Do you want to remove all textures or leave some?");
-                Console.WriteLine("[1] Remove all\n[2] Leave some\n[0] Cancel");
+                Console.WriteLine("Do you want to remove all textures or leave some necessary textures?");
+                Console.WriteLine("[1] Leave Necessary Textures \n[2] Remove All\n[0] Cancel");
 
                 Console.Write(">");
                 try {
@@ -125,7 +135,7 @@ namespace RTCSharpEdition {
                     list_textures = list_textures.Append(files[i]).ToArray();
                 }
  
-                if (choice == 2) {
+                if (choice == 1) {
                     for (int i = 0; i < EXCEPTION_TEXTURES.Length; i++) {
                         if (list_textures.Contains(RO_TEXTURE_DIR+"\\"+EXCEPTION_TEXTURES[i])) {
                             list_textures = list_textures.Where(x => x != RO_TEXTURE_DIR+"\\"+EXCEPTION_TEXTURES[i]).ToArray();
@@ -167,6 +177,7 @@ namespace RTCSharpEdition {
         //List Texture
         static void ListTextures() {
             Console.WriteLine("[Textures List]");
+            Console.WriteLine("Texture Count: {0}\n", TextureCount());
             string[] dirs = Directory.GetDirectories(RO_TEXTURE_DIR);
             string[] files = Directory.GetFiles(RO_TEXTURE_DIR);
             for (int i = 0; i < dirs.Length; i++) {
@@ -247,11 +258,50 @@ namespace RTCSharpEdition {
             return "Unknown";
         }
 
+        //Count Backup Files
+        static void BackupTexuresCount() {
+            if (!Directory.Exists(BACKUP_DIR)) {
+                Console.WriteLine("[Backup Folder Not Found]");
+            } else {
+                int count = TextureCount(BACKUP_DIR);
+                Console.WriteLine("[Backup Textures Count]");
+                Console.WriteLine("Count: {0}\n", count);
+
+                if (count == 24) {
+                    Console.WriteLine("[All Textures Found]");
+                } else {
+                    Console.WriteLine("[Not All Textures Found]\n[There are {0} Texture(s) Missing]", 24-count);
+                }
+            }
+
+            Console.Write("\n[Press Any key to continue]");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        //Count Textures
+        static int TextureCount(string directory="") {
+            if (directory == "") {
+                directory = RO_TEXTURE_DIR;
+            }
+
+            string[] dirs = Directory.GetDirectories(directory);
+            string[] files = Directory.GetFiles(directory);
+            int count = 0;
+            for (int i = 0; i < dirs.Length; i++) {
+                count++;
+            }
+            for (int i = 0; i < files.Length; i++) {
+                count++;
+            }
+            return count;
+        }
+
         //About
         static void About() {
             Console.WriteLine("[About]");
             Console.WriteLine("{0}", NAME_VERSION);
-            Console.WriteLine("Made by: {0}", AUTHOR);
+            Console.WriteLine("Made by {0}", AUTHOR);
             Console.WriteLine("Repository: {0}", REPOSITORY);
 
             Console.Write("\n[Press Any key to continue]");
@@ -278,8 +328,9 @@ namespace RTCSharpEdition {
             do {
                 Console.WriteLine(NAME_VERSION);
                 Console.WriteLine("[1] Delete Textures\n[2] List Textures\n[3] Update Version Directory");
-                Console.WriteLine("[4] Backup Textures\n[5] Restore Textures\n[6] Delete Backup Folder\n");
-                Console.WriteLine("[7] About\n[0] Exit\n");
+                Console.WriteLine("[4] Backup Textures\n[5] Restore Textures\n[6] Delete Backup Folder");
+                Console.WriteLine("[7] Backup Textures Count\n");
+                Console.WriteLine("[8] About\n[0] Exit\n");
                 Console.WriteLine("Current Version Directory:\n\"{0}\"\nType: {1}", RO_VERSION_DIR, RO_VERSION_DIR_TYPE);
                 
                 Console.Write(">");
@@ -311,6 +362,9 @@ namespace RTCSharpEdition {
                         DeleteBackupDir();
                         break;
                     case 7:
+                        BackupTexuresCount();
+                        break;
+                    case 8:
                         About();
                         break;
                     default:
