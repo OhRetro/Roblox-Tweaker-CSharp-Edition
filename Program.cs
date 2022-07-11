@@ -1,11 +1,14 @@
 ﻿//Roblox Tweaker C# Edition
 
+using DiscordRPC;
+using DiscordRPC.Logging;
+
 namespace RTCSharpEdition
 {
     internal class Program
     {
         const string NAME = "Roblox Tweaker C# Edition";
-        const string VERSION = "1.1";
+        const string VERSION = "1.2";
         const string AUTHOR = "OhRetro";
         const string NAME_VERSION = NAME + " v" + VERSION;
         const string REPOSITORY = "https://github.com/OhRetro/Roblox-Tweaker-CSharp-Edition";
@@ -49,7 +52,7 @@ namespace RTCSharpEdition
         {
             Console.Clear();
             string[] dirs = Directory.GetDirectories(ROBLOX_VERSIONS_DIR);
-            string[] valid_dirs = { };
+            string[] valid_dirs = Array.Empty<string>();
             for (int i = 0; i < dirs.Length; i++)
             {
                 if (dirs[i].Split('\\').Last().StartsWith("version-"))
@@ -66,7 +69,15 @@ namespace RTCSharpEdition
                     Console.Write("[{0}] {1} | ", i, valid_dirs[i].Split('\\').Last());
                     Console.Write("{0} | ", RobloxVersionType(valid_dirs[i]));
                     Console.Write("Textures Count: {0} | ", TextureCount(valid_dirs[i] + PATH_TO_TEXTURES_DIR));
-                    Console.Write("{0}\n", Directory.GetCreationTime(valid_dirs[i]));
+                    Console.Write("{0}", Directory.GetCreationTime(valid_dirs[i]));
+                    if (valid_dirs[i] == ROBLOX_VERSION_DIR)
+                    {
+                        Console.Write(" <- Current Selected\n");
+                    }
+                    else
+                    {
+                        Console.Write("\n");
+                    }
                 }
 
                 Console.Write(">");
@@ -158,7 +169,7 @@ namespace RTCSharpEdition
                 string[] dirs = Directory.GetDirectories(ROBLOX_TEXTURE_DIR);
                 string[] files = Directory.GetFiles(ROBLOX_TEXTURE_DIR);
 
-                string[] list_textures = { };
+                string[] list_textures = Array.Empty<string>();
                 for (int i = 0; i < dirs.Length; i++)
                 {
                     list_textures = list_textures.Append(dirs[i]).ToArray();
@@ -197,7 +208,7 @@ namespace RTCSharpEdition
                 string[] dirs_remaining = Directory.GetDirectories(ROBLOX_TEXTURE_DIR);
                 string[] files_remaining = Directory.GetFiles(ROBLOX_TEXTURE_DIR);
 
-                string[] list_textures_remaining = { };
+                string[] list_textures_remaining = Array.Empty<string>();
                 for (int i = 0; i < dirs_remaining.Length; i++)
                 {
                     list_textures_remaining = list_textures_remaining.Append(dirs_remaining[i]).ToArray();
@@ -376,6 +387,18 @@ namespace RTCSharpEdition
             return count;
         }
 
+        //Validate Roblox Version Directory
+        static void ValidateRobloxVersionDir()
+        {
+            if (!ROBLOX_VERSION_DIR.StartsWith(ROBLOX_VERSIONS_DIR) && !ROBLOX_VERSION_DIR.Split('\\').Last().StartsWith("version-"))
+            {
+                Console.WriteLine("[Invalid Roblox Version Directory]");
+                Thread.Sleep(2000);
+                ManualDirUpdate();
+
+            }
+        }
+
         //About
         static void About()
         {
@@ -389,26 +412,46 @@ namespace RTCSharpEdition
             Console.Clear();
         }
 
-        static void Main(string[] args)
+        static void Main()
         {
             Console.Title = NAME_VERSION;
             Console.Clear();
 
+            DiscordRpcClient client;
+
+            client = new DiscordRpcClient("994756663338864681");
+            client.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
+            client.Initialize();
+            client.SetPresence(new RichPresence()
+            {
+                Details = NAME,
+                State = "Version: " + VERSION,
+                Assets = new Assets()
+                {
+                    LargeImageKey = "rt_logo",
+                    LargeImageText = "Made by " + AUTHOR,
+                    SmallImageKey = "csharp",
+                    SmallImageText = "C# Edition"
+                },
+                Buttons = new Button[]
+                {
+                    new Button()
+                    {
+                        Label = "Repository",
+                        Url = REPOSITORY
+                    }
+                }
+            });
+
             Console.WriteLine("{0} by {1}\n", NAME_VERSION, AUTHOR);
             ReadRobloxVersionDirFile();
-
-            if (!ROBLOX_VERSION_DIR.Split('\\').Last().StartsWith("version-"))
-            {
-                Console.WriteLine("[Invalid Roblox version directory]");
-                Thread.Sleep(2000);
-                ManualDirUpdate();
-            }
+            
+            ValidateRobloxVersionDir();
 
             Console.Clear();
 
             int menu;
-            do
-            {
+            do {
                 Console.WriteLine(NAME_VERSION);
                 Console.WriteLine("[1] Delete Textures\n[2] List Textures\n[3] Update Version Directory");
                 Console.WriteLine("[4] Backup Textures\n[5] Restore Textures\n[6] Delete Backup Folder");
@@ -417,18 +460,17 @@ namespace RTCSharpEdition
                 Console.WriteLine("Current Version Directory:\n\"{0}\"\nType: {1}", ROBLOX_VERSION_DIR, ROBLOX_VERSION_DIR_TYPE);
 
                 Console.Write(">");
-                try
-                {
+                try {
                     menu = Convert.ToInt32(Console.ReadLine());
-                }
-                catch (Exception)
+                } 
+                catch (Exception) 
                 {
                     menu = -1;
                 }
 
                 Console.Clear();
 
-                switch (menu)
+                switch (menu) 
                 {
                     case 1:
                         RemoveTexture();
@@ -458,6 +500,7 @@ namespace RTCSharpEdition
                         break;
                 }
             } while (menu != 0);
+            client.Dispose();
         }
     }
 }

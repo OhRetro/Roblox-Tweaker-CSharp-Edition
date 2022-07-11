@@ -11,20 +11,30 @@
 		<Authors>OhRetro</Authors>
 		<Product>Roblox Tweaker C# Edition</Product>
 		<Description>It is a tool that allows you to tweak Roblox Textures</Description>
-		<ApplicationIcon>logo.ico</ApplicationIcon>
 
 		<VersionMajor>1</VersionMajor>
-		<VersionMinor>1</VersionMinor>
+		<VersionMinor>2</VersionMinor>
 		<VersionPrefix>$(VersionMajor).$(VersionMinor)</VersionPrefix>
 		<VersionSuffix>BUILD-$([System.DateTime]::UtcNow.ToString(yyyyMMdd-HHmm))</VersionSuffix>
-		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+		
 		<FileVersion>$(VersionPrefix)</FileVersion>
-	  
+		
 		<NeutralLanguage>en</NeutralLanguage>
-		<AssemblyName>$(MSBuildProjectName)-BUILD-$([System.DateTime]::UtcNow.ToString(yyyyMMdd-HHmm))</AssemblyName>
+		
+		<AssemblyTitle>Roblox Tweaker C# Edition</AssemblyTitle>
+		<AssemblyName>$(MSBuildProjectName)-BUILD-$([System.DateTime]::UtcNow.ToString(yyyyMMdd))</AssemblyName>
+		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+		
 		<Copyright>2022</Copyright>
-		<SignAssembly>False</SignAssembly>
+		
+		<StartupObject>RTCSharpEdition.Program</StartupObject>
+		
+		<ApplicationIcon>logo.ico</ApplicationIcon>
 
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="DiscordRichPresence" Version="1.0.175" />
+	</ItemGroup>
 
 </Project>
